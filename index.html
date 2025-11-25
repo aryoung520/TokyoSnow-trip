@@ -1,389 +1,457 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>北海道雪國物語</title>
-    
-    <!-- iPhone 專屬設定：讓網頁變成全螢幕 App -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="北海道之旅">
-    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1548263594-a71ea196f978?q=80&w=180&auto=format&fit=crop">
+import React, { useState, useEffect } from 'react';
+import { 
+  Plane, 
+  MapPin, 
+  Calendar, 
+  Utensils, 
+  BedDouble, 
+  ChevronDown, 
+  ChevronUp, 
+  Snowflake, 
+  Camera, 
+  ShoppingBag,
+  Ticket,
+  Heart,
+  Share2,
+  ArrowRight,
+  Mountain,
+  Sparkles,
+  BookOpen, // Changed Quote to BookOpen for History
+  Info,
+  History // Added History icon
+} from 'lucide-react';
 
-    <!-- 載入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 設定 Tailwind 字型與顏色 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <style>
-        /* 隱藏捲軸但保留功能 */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        /* iOS Safe Area 修正 */
-        .safe-area-pb {
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        /* 防止 iOS 點擊反灰 */
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-    </style>
-</head>
-<body class="bg-gray-50">
-    <div id="root"></div>
+const TokyoSnowTripApp = () => {
+  const [activeTab, setActiveTab] = useState('itinerary');
+  const [expandedDay, setExpandedDay] = useState(0); // Default expand Day 1
+  const [liked, setLiked] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
-    <!-- 載入 React 和 Lucide Icons (使用 ES Modules) -->
-    <script type="module">
-        import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
-        import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
-        import { 
-            Plane, MapPin, Calendar, Clock, Utensils, BedDouble, 
-            ChevronDown, ChevronUp, Snowflake, Camera, ShoppingBag, 
-            Ticket, Heart, Share2, ArrowRight 
-        } from 'https://esm.sh/lucide-react@0.344.0';
+  // 監聽滾動以製作視差效果
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-        const HokkaidoTripApp = () => {
-            const [activeTab, setActiveTab] = useState('itinerary');
-            const [expandedDay, setExpandedDay] = useState(0);
-            const [liked, setLiked] = useState(false);
-            const [showBookingModal, setShowBookingModal] = useState(false);
+  // 行程資料 (已更新圖片與深度歷史特色)
+  const tripDetails = {
+    title: "玩雪FUN東京．初級滑雪體驗．伊香保溫泉．萬座王子．輕井澤渡假區5日",
+    tourCode: "NTX020405BR6B",
+    price: "43,300",
+    date: "2026/02/04 (三) - 02/08 (日)",
+    airline: "星宇航空 (STARLUX Airlines)",
+    flightOut: "JX800 桃園 08:30 - 成田 12:45",
+    flightIn: "JX801 成田 14:00 - 桃園 16:30",
+    tags: ["滑雪初體驗", "伊香保溫泉", "輕井澤Outlet", "草津湯畑", "川越小江戶"],
+    weather: { temp: "-2°C", condition: "粉雪" }
+  };
 
-            // 模擬行程資料
-            const tripDetails = {
-                title: "北海道雪國物語．破冰船．阿寒湖冰上嘉年華．三大蟹溫泉5日",
-                price: "45,900",
-                date: "2026/02/08 (日) - 02/12 (四)",
-                airline: "長榮航空 (EVA AIR)",
-                flightOut: "BR116 桃園 09:30 - 新千歲 14:05",
-                flightIn: "BR115 新千歲 15:20 - 桃園 19:00",
-                tags: ["保證入住溫泉飯店", "三大蟹吃到飽", "流冰體驗", "雪上活動"],
-                weather: { temp: "-5°C", condition: "大雪" }
-            };
+  const itinerary = [
+    {
+      day: 1,
+      title: "桃園 / 東京成田 / 伊香保石段街 / 溫泉飯店",
+      date: "02/04 (三)",
+      highlights: ["特別贈送日式點心+茶飲", "伊香保石段街", "美人湯溫泉"],
+      details: "搭乘星宇航空豪華客機直飛東京。抵達後前往伊香保溫泉區，漫步於充滿古意的石段街（365階），感受溫泉街的懷舊氛圍。晚餐享用飯店內會席料理或自助餐。",
+      meals: { b: "機上精緻餐食", l: "機上精緻餐食", d: "飯店自助晚餐 或 會席料理" },
+      hotel: "森秋旅館 或 如心之里 或 同級",
+      icon: <Plane className="w-5 h-5 text-blue-500" />,
+      tagColor: "bg-blue-50 text-blue-600",
+      image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=800&auto=format&fit=crop", // Japanese Street/Lanterns
+      detailedFeatures: {
+        feature: "整條街道共有365級石階，象徵「一年365天，天天都熱鬧繁榮」。兩旁林立著許多溫泉饅頭店（伊香保是溫泉饅頭的發源地）、射擊遊戲場與土產店，充滿濃厚的昭和復古風情。",
+        history: "伊香保溫泉的歷史相當悠久，早在日本最古老的詩歌總集《萬葉集》中就有記載，距今已有1300多年歷史。戰國時代，武田勝賴為了療養受傷的士兵，將此地整建成石階構造的溫泉街，是日本最早進行都市計畫的溫泉區之一。"
+      }
+    },
+    {
+      day: 2,
+      title: "伊香保 / 草津湯畑 / 萬座滑雪體驗 (Ski或戲雪)",
+      date: "02/05 (四)",
+      highlights: ["草津溫泉散策", "湯畑舞揉湯秀", "滑雪體驗(含雪具)"],
+      details: "前往日本三大名湯之一的草津溫泉，參觀著名的「湯畑」與傳統「揉湯秀」。接著前往萬座滑雪場，體驗初級滑雪（含雪鞋、雪橇、雪杖）或 選擇戲雪活動（雪盆、甜甜圈）。",
+      meals: { b: "飯店內早餐", l: "壽喜燒定食 或 日式風味餐", d: "飯店自助晚餐 或 會席料理" },
+      hotel: "萬座王子飯店 或 同級",
+      icon: <Snowflake className="w-5 h-5 text-cyan-500" />,
+      tagColor: "bg-cyan-50 text-cyan-600",
+      image: "https://images.unsplash.com/photo-1576014131341-c9772b7a0d42?q=80&w=800&auto=format&fit=crop", // Steam/Hot Spring vibe
+      detailedFeatures: {
+        feature: "草津溫泉連續多年蟬聯日本溫泉百選第一名。最著名的「湯畑」位於溫泉街中心，每分鐘湧出4000公升的滾燙溫泉，熱氣蒸騰如雲霧繚繞。獨特的「揉湯（湯もみ）」表演，是利用長木板攪拌溫泉以降低水溫的傳統技法。",
+        history: "傳說草津溫泉是由日本武尊所發現，江戶時代的溫泉排行榜中，草津被列為最高等級的「東之大關」。明治時代，德國醫生貝爾茲（Erwin von Bälz）向世界介紹了草津溫泉卓越的療效，使其名揚國際。"
+      }
+    },
+    {
+      day: 3,
+      title: "鬼押出園 / 輕井澤舊銀座通 / 聖保羅教堂 / Outlet",
+      date: "02/06 (五)",
+      highlights: ["鬼押出園奇景", "舊輕井澤銀座通", "王子購物廣場Outlet"],
+      details: "參觀淺間山火山噴發形成的鬼押出園奇景。接著前往避暑勝地輕井澤，漫步舊銀座通商店街，參觀聖保羅教堂。下午在輕井澤王子Outlet盡情購物。",
+      meals: { b: "飯店內早餐", l: "釜飯定食 或 燒肉定食", d: "方便遊玩，發放代金2000日幣" },
+      hotel: "輕井澤1130 或 輕井澤王子小木屋 或 同級",
+      icon: <ShoppingBag className="w-5 h-5 text-pink-500" />,
+      tagColor: "bg-pink-50 text-pink-600",
+      image: "https://images.unsplash.com/photo-1483038660502-0e8979c4a8dc?q=80&w=800&auto=format&fit=crop", // Winter Forest/Church vibe
+      detailedFeatures: {
+        feature: "聖保羅天主教堂擁有巨大的尖塔與傾斜的三角形屋頂，內部為木造結構，與輕井澤的自然森林完美融合。舊輕井澤銀座通則充滿歐式風情，著名的果醬店、麵包店林立，是有「東方小瑞士」之稱的度假勝地。",
+        history: "輕井澤原為江戶時代的宿場町。1886年，加拿大傳教士亞歷山大·克羅夫多·蕭（Alexander Croft Shaw）覺得此地氣候類似故鄉多倫多，便在此建造別墅避暑，帶動了外國人士與文人雅士來此度假的風潮。聖保羅教堂則由建築大師安東尼·雷蒙於1935年設計。"
+      }
+    },
+    {
+      day: 4,
+      title: "川越小江戶 / 免稅店 / 台場 (鋼彈、購物)",
+      date: "02/07 (六)",
+      highlights: ["川越藏造老街", "星巴克時鐘小路店", "獨角獸鋼彈"],
+      details: "前往有「小江戶」之稱的川越，欣賞傳統藏造建築與時鐘小路。午後返回東京市區，前往免稅店，最後在台場購物廣場自由活動，欣賞巨型獨角獸鋼彈。",
+      meals: { b: "飯店內早餐", l: "日式涮涮鍋 或 鰻魚飯", d: "方便遊玩，敬請自理" },
+      hotel: "池袋太陽城王子 或 池袋大都會 或 同級",
+      icon: <Camera className="w-5 h-5 text-purple-500" />,
+      tagColor: "bg-purple-50 text-purple-600",
+      image: "https://images.unsplash.com/photo-1554286660-c4e97669d273?q=80&w=800&auto=format&fit=crop", // Old Japanese Building/Street
+      detailedFeatures: {
+        feature: "川越最著名的景觀是「藏造一番街」，街道兩旁保留了許多黑色厚重瓦片屋頂的倉庫式建築（藏造）。地標「時之鐘」每天會敲響四次報時。這裡還有一間設計融入江戶街景的星巴克，是熱門打卡點。",
+        history: "川越在江戶時代是繁榮的商業重鎮，透過新河岸川與江戶（東京）進行物資運輸，因此被稱為「小江戶」。1893年發生川越大火後，商人們為了防火，不惜重金建造了耐火的「藏造」建築群，這些建築幸運地保留至今，成為國家重要傳統建造物群保存地區。"
+      }
+    },
+    {
+      day: 5,
+      title: "東京成田 / 桃園 (溫暖的家)",
+      date: "02/08 (日)",
+      highlights: ["滿載而歸", "溫暖的家"],
+      details: "享用早餐後，整理行囊，帶著滿滿的回憶與戰利品前往成田機場，搭機返回溫暖的家。",
+      meals: { b: "飯店內早餐", l: "機上精緻餐食", d: "溫暖的家" },
+      hotel: "溫暖的家",
+      icon: <Plane className="w-5 h-5 text-green-500" />,
+      tagColor: "bg-green-50 text-green-600",
+      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop", // Airplane
+      detailedFeatures: {
+        feature: "星宇航空（STARLUX Airlines）是台灣新興的精品航空公司，以精緻的機上餐食、獨特的香氛以及充滿質感的客艙設計聞名，致力於提供高端的飛行體驗。",
+        history: "星宇航空由張國煒於2018年創辦，2020年正式開航。即使初期面臨疫情挑戰，仍堅持打造高品質服務，迅速累積了大量忠實粉絲，被稱為台灣航空界的「精品」。"
+      }
+    }
+  ];
 
-            const itinerary = [
-                {
-                    day: 1,
-                    title: "出發與抵達：桃園 / 千歲空港 / 支笏湖國立公園",
-                    date: "02/08 (日)",
-                    highlights: ["全日本第二深湖泊", "支笏湖冰濤祭(預定)"],
-                    details: "搭乘長榮航空波音客機直飛北海道。抵達後前往支笏湖，欣賞清澈湖水與壯麗的惠庭岳，若時間允許將參觀冬季限定的冰濤祭。",
-                    meals: { b: "機上精緻餐食", l: "機上精緻餐食", d: "飯店內迎賓會席料理 或 自助百匯" },
-                    hotel: "定山溪 萬世閣 或 同級溫泉飯店",
-                    icon: React.createElement(Plane, { className: "w-5 h-5 text-blue-500" })
-                },
-                {
-                    day: 2,
-                    title: "雪上樂園 / 小樽運河 / 音樂盒堂 / 札幌",
-                    date: "02/09 (一)",
-                    highlights: ["雪上甜甜圈無限玩", "小樽羅曼蒂克街道", "北菓樓妖精之森"],
-                    details: "上午前往滑雪場體驗戲雪樂趣。下午漫步於充滿大正浪漫氣息的小樽運河，參觀北一硝子館與音樂盒堂，品嚐不思議大泡芙。",
-                    meals: { b: "飯店內早餐", l: "日式石狩鍋+烤魚料理", d: "三大蟹吃到飽+軟飲無限" },
-                    hotel: "札幌 Royton 或 Premier Hotel Tsubaki",
-                    icon: React.createElement(Snowflake, { className: "w-5 h-5 text-cyan-500" })
-                },
-                {
-                    day: 3,
-                    title: "札幌市區觀光 / 大通公園 / 免稅店 / 狸小路",
-                    date: "02/10 (二)",
-                    highlights: ["第76屆札幌雪祭(預定)", "時計台", "狸小路商店街"],
-                    details: "參觀北海道神宮，接著前往大通公園欣賞著名的札幌雪祭（視日期而定）。下午前往免稅店與狸小路自由購物。",
-                    meals: { b: "飯店內早餐", l: "北海道風味燒肉", d: "方便逛街，敬請自理" },
-                    hotel: "札幌 Royton 或 Premier Hotel Tsubaki",
-                    icon: React.createElement(Camera, { className: "w-5 h-5 text-purple-500" })
-                },
-                {
-                    day: 4,
-                    title: "自由活動日 (Free Time)",
-                    date: "02/11 (三)",
-                    highlights: ["全日自由活動", "探索札幌美食", "地鐵自由行"],
-                    details: "全日自由活動。您可自行前往二條市場品嚐海鮮丼，或搭乘地鐵前往白色戀人公園，享受屬於您的北海道時光。",
-                    meals: { b: "飯店內早餐", l: "方便遊玩，敬請自理", d: "方便遊玩，敬請自理" },
-                    hotel: "札幌 Royton 或 Premier Hotel Tsubaki",
-                    icon: React.createElement(MapPin, { className: "w-5 h-5 text-green-500" })
-                },
-                {
-                    day: 5,
-                    title: "三井Outlet Park / 千歲空港 / 桃園",
-                    date: "02/12 (四)",
-                    highlights: ["最後掃貨", "滿載而歸"],
-                    details: "早餐後前往北廣島三井Outlet Park，囊括多國知名品牌。隨後前往機場搭機返回溫暖的家。",
-                    meals: { b: "飯店內早餐", l: "機上精緻餐食", d: "溫暖的家" },
-                    hotel: "溫暖的家",
-                    icon: React.createElement(ShoppingBag, { className: "w-5 h-5 text-red-500" })
-                }
-            ];
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans pb-8 relative overflow-hidden max-w-md mx-auto shadow-2xl border-x border-gray-100">
+      
+      {/* Hero Section with Parallax */}
+      <div className="relative h-[400px] w-full overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-gradient-to-b from-indigo-900 via-blue-800 to-slate-50"
+          style={{ transform: `translateY(${scrollY * 0.4}px)` }}
+        >
+          {/* 背景裝飾元素 */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-30 bg-[url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
+          
+          {/* 動態雪花 */}
+          <div className="absolute top-10 left-10 text-white/20 animate-pulse"><Snowflake size={30} /></div>
+          <div className="absolute top-40 right-10 text-white/20 animate-pulse delay-700"><Snowflake size={50} /></div>
+          <div className="absolute bottom-20 left-1/3 text-white/10 animate-pulse delay-300"><Mountain size={120} /></div>
 
-            const [scrollY, setScrollY] = useState(0);
-            useEffect(() => {
-                const handleScroll = () => setScrollY(window.scrollY);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
+          <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-slate-50 to-transparent z-10"></div>
+        </div>
 
-            return (
-                React.createElement("div", { className: "min-h-screen bg-gray-50 font-sans pb-24 relative overflow-hidden select-none" },
-                    // Hero Section
-                    React.createElement("div", { className: "relative h-[380px] w-full overflow-hidden" },
-                        React.createElement("div", { 
-                            className: "absolute inset-0 bg-gradient-to-b from-blue-300 via-blue-100 to-white",
-                            style: { transform: `translateY(${scrollY * 0.5}px)` }
-                        },
-                            React.createElement("div", { className: "absolute top-10 left-10 text-white opacity-50" }, React.createElement(Snowflake, { size: 40 })),
-                            React.createElement("div", { className: "absolute top-20 right-20 text-white opacity-40" }, React.createElement(Snowflake, { size: 60 })),
-                            React.createElement("div", { className: "absolute bottom-32 left-1/3 text-blue-200 opacity-60" }, React.createElement(Snowflake, { size: 100 })),
-                            React.createElement("div", { className: "absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-gray-900/80 to-transparent z-10" })
-                        ),
-                        // 頂部導航
-                        React.createElement("div", { className: "absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-center pt-safe" },
-                             React.createElement("div", { className: "bg-white/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-white/30 transition" },
-                                React.createElement(ArrowRight, { className: "text-white rotate-180", size: 24 })
-                             ),
-                             React.createElement("div", { className: "flex gap-3" },
-                                React.createElement("div", { 
-                                    onClick: () => setLiked(!liked),
-                                    className: "bg-white/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-white/30 transition"
-                                }, React.createElement(Heart, { className: liked ? 'fill-red-500 text-red-500' : 'text-white', size: 24 })),
-                                React.createElement("div", { className: "bg-white/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-white/30 transition" },
-                                    React.createElement(Share2, { className: "text-white", size: 24 })
-                                )
-                             )
-                        ),
-                        // 標題
-                        React.createElement("div", { className: "absolute bottom-6 left-4 right-4 z-20 text-white" },
-                            React.createElement("div", { className: "flex items-center gap-2 mb-2" },
-                                React.createElement("span", { className: "bg-blue-600 text-xs font-bold px-2 py-1 rounded-md" }, "可樂旅遊"),
-                                React.createElement("span", { className: "bg-white/20 backdrop-blur-sm text-xs px-2 py-1 rounded-md border border-white/30" }, `${tripDetails.weather.temp} ${tripDetails.weather.condition}`)
-                            ),
-                            React.createElement("h1", { className: "text-2xl font-bold leading-tight mb-2 shadow-sm" }, tripDetails.title),
-                            React.createElement("div", { className: "flex items-center text-sm text-gray-200 gap-1" },
-                                React.createElement(Calendar, { size: 14 }),
-                                React.createElement("span", null, tripDetails.date),
-                                React.createElement("span", { className: "mx-1" }, "|"),
-                                React.createElement(Plane, { size: 14 }),
-                                React.createElement("span", null, "5 天 4 夜")
-                            )
-                        )
-                    ),
+        {/* Navbar */}
+        <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-center pt-8">
+          <div className="bg-black/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-black/30 transition border border-white/10">
+            <ArrowRight className="text-white rotate-180" size={20} />
+          </div>
+          <div className="flex gap-3">
+            <div 
+              onClick={() => setLiked(!liked)}
+              className="bg-black/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-black/30 transition border border-white/10"
+            >
+              <Heart className={`${liked ? 'fill-rose-500 text-rose-500' : 'text-white'}`} size={20} />
+            </div>
+            <div className="bg-black/20 backdrop-blur-md p-2 rounded-full cursor-pointer hover:bg-black/30 transition border border-white/10">
+              <Share2 className="text-white" size={20} />
+            </div>
+          </div>
+        </div>
 
-                    // 內容區
-                    React.createElement("div", { className: "relative z-30 -mt-6 bg-gray-50 rounded-t-3xl px-4 pt-6" },
-                        
-                        // Tags
-                        React.createElement("div", { className: "flex overflow-x-auto gap-3 pb-4 no-scrollbar" },
-                            tripDetails.tags.map((tag, idx) => 
-                                React.createElement("span", { key: idx, className: "whitespace-nowrap bg-white text-blue-600 text-sm font-medium px-4 py-2 rounded-full shadow-sm border border-blue-50" }, `# ${tag}`)
-                            )
-                        ),
+        {/* Title Area */}
+        <div className="absolute bottom-4 left-5 right-5 z-20">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full tracking-wider">可樂旅遊</span>
+            <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md px-2 py-1 rounded-full border border-white/20 text-white text-xs">
+               <Snowflake size={12} /> 
+               <span>{tripDetails.weather.temp} {tripDetails.weather.condition}</span>
+            </div>
+          </div>
+          <h1 className="text-2xl font-bold leading-snug text-white mb-2 drop-shadow-md">{tripDetails.title}</h1>
+          <div className="flex items-center text-xs text-blue-100 gap-3 font-medium">
+            <div className="flex items-center gap-1"><Calendar size={14} /> {tripDetails.date}</div>
+            <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
+            <div>5 天 4 夜</div>
+          </div>
+        </div>
+      </div>
 
-                        // 航班
-                        React.createElement("div", { className: "bg-white p-4 rounded-2xl shadow-sm mb-6 border border-gray-100" },
-                             React.createElement("h3", { className: "text-gray-500 text-xs font-bold uppercase tracking-wider mb-3" }, "航班資訊"),
-                             React.createElement("div", { className: "flex justify-between items-center mb-4" },
-                                React.createElement("div", { className: "text-center" },
-                                    React.createElement("div", { className: "text-2xl font-bold text-gray-800" }, "TPE"),
-                                    React.createElement("div", { className: "text-xs text-gray-500" }, "台北桃園")
-                                ),
-                                React.createElement("div", { className: "flex-1 flex flex-col items-center px-4" },
-                                    React.createElement("span", { className: "text-xs text-blue-600 font-medium" }, tripDetails.airline),
-                                    React.createElement("div", { className: "w-full h-[1px] bg-gray-300 relative my-2" },
-                                        React.createElement(Plane, { className: "absolute -top-2 left-1/2 -translate-x-1/2 text-blue-400 rotate-90 bg-white px-1", size: 16 })
-                                    ),
-                                    React.createElement("span", { className: "text-xs text-gray-400" }, "約 4h 35m")
-                                ),
-                                React.createElement("div", { className: "text-center" },
-                                    React.createElement("div", { className: "text-2xl font-bold text-gray-800" }, "CTS"),
-                                    React.createElement("div", { className: "text-xs text-gray-500" }, "札幌新千歲")
-                                )
-                             ),
-                             React.createElement("div", { className: "bg-gray-50 rounded-lg p-3 text-xs text-gray-600 space-y-1" },
-                                React.createElement("div", { className: "flex justify-between" },
-                                    React.createElement("span", null, "去程"),
-                                    React.createElement("span", { className: "font-mono font-medium text-gray-900" }, tripDetails.flightOut)
-                                ),
-                                React.createElement("div", { className: "flex justify-between" },
-                                    React.createElement("span", null, "回程"),
-                                    React.createElement("span", { className: "font-mono font-medium text-gray-900" }, tripDetails.flightIn)
-                                )
-                             )
-                        ),
+      {/* Content Container */}
+      <div className="relative z-30 -mt-4 px-4 pb-8">
+        
+        {/* Highlight Tags */}
+        <div className="flex overflow-x-auto gap-2 pb-4 no-scrollbar mb-2">
+          {tripDetails.tags.map((tag, idx) => (
+            <span key={idx} className="whitespace-nowrap bg-white text-slate-600 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm border border-slate-100 flex items-center gap-1">
+              # {tag}
+            </span>
+          ))}
+        </div>
 
-                        // Tabs
-                        React.createElement("div", { className: "flex border-b border-gray-200 mb-6 sticky top-0 bg-gray-50 z-40 pt-2" },
-                            ['itinerary', 'highlights', 'notice'].map(tab => {
-                                const labels = { itinerary: '每日行程', highlights: '行程亮點', notice: '注意事項' };
-                                return React.createElement("button", {
-                                    key: tab,
-                                    onClick: () => setActiveTab(tab),
-                                    className: `flex-1 pb-3 text-sm font-medium transition-colors relative ${activeTab === tab ? 'text-blue-600' : 'text-gray-400'}`
-                                }, 
-                                    labels[tab],
-                                    activeTab === tab && React.createElement("div", { className: "absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-blue-600 rounded-t-full" })
-                                )
-                            })
-                        ),
+        {/* Flight Card - Updated for Starlux */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 mb-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-50 rounded-bl-full -mr-10 -mt-10 z-0"></div>
+          <div className="relative z-10">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Flight Info</span>
+              <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">{tripDetails.airline}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="text-center">
+                <div className="text-3xl font-black text-slate-800">TPE</div>
+                <div className="text-xs text-slate-500 mt-1">08:30</div>
+              </div>
+              <div className="flex-1 px-4 flex flex-col items-center">
+                <div className="w-full border-t-2 border-dashed border-slate-200 relative top-3"></div>
+                <Plane className="text-yellow-500 bg-white px-1 relative z-10 rotate-90" size={24} />
+                <span className="text-[10px] text-slate-400 mt-1">約 3h 15m</span>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-black text-slate-800">NRT</div>
+                <div className="text-xs text-slate-500 mt-1">12:45</div>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between">
+               <span>去程: JX800</span>
+               <span>回程: JX801 (14:00-16:30)</span>
+            </div>
+          </div>
+        </div>
 
-                        // Tab Content: Itinerary
-                        activeTab === 'itinerary' && React.createElement("div", { className: "space-y-4" },
-                            itinerary.map((item, index) => {
-                                const isExpanded = expandedDay === index;
-                                return React.createElement("div", {
-                                    key: index,
-                                    onClick: () => setExpandedDay(isExpanded ? null : index),
-                                    className: `bg-white rounded-2xl overflow-hidden transition-all duration-300 border ${isExpanded ? 'border-blue-200 shadow-md scale-[1.01]' : 'border-gray-100 shadow-sm'}`
-                                },
-                                    React.createElement("div", { className: "p-4 flex items-start gap-4 cursor-pointer" },
-                                        React.createElement("div", { className: `flex flex-col items-center justify-center w-12 h-14 rounded-xl shrink-0 ${isExpanded ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}` },
-                                            React.createElement("span", { className: "text-xs font-medium" }, "Day"),
-                                            React.createElement("span", { className: "text-xl font-bold leading-none" }, item.day)
-                                        ),
-                                        React.createElement("div", { className: "flex-1 min-w-0" },
-                                            React.createElement("div", { className: "text-xs text-gray-500 mb-1" }, item.date),
-                                            React.createElement("h3", { className: `font-bold text-base truncate ${isExpanded ? 'text-blue-700' : 'text-gray-800'}` }, item.title),
-                                            !isExpanded && React.createElement("div", { className: "flex gap-2 mt-2" },
-                                                item.highlights.slice(0, 2).map((h, i) => 
-                                                    React.createElement("span", { key: i, className: "text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md" }, h)
-                                                )
-                                            )
-                                        ),
-                                        React.createElement("div", { className: "mt-2 text-gray-400" },
-                                            React.createElement(isExpanded ? ChevronUp : ChevronDown, { size: 20 })
-                                        )
-                                    ),
-                                    isExpanded && React.createElement("div", { className: "px-4 pb-5 pt-0 animate-in fade-in slide-in-from-top-2 duration-300" },
-                                        React.createElement("div", { className: "w-full h-px bg-gray-100 mb-4" }),
-                                        React.createElement("div", { className: "text-sm text-gray-600 leading-relaxed mb-4" }, item.details),
-                                        React.createElement("div", { className: "flex flex-wrap gap-2 mb-4" },
-                                            item.highlights.map((h, i) => 
-                                                React.createElement("div", { key: i, className: "flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-md border border-amber-100" },
-                                                    React.createElement(Ticket, { size: 12 }), h
-                                                )
-                                            )
-                                        ),
-                                        React.createElement("div", { className: "bg-gray-50 rounded-xl p-3 space-y-2" },
-                                            React.createElement("div", { className: "flex items-start gap-3" },
-                                                React.createElement(Utensils, { className: "text-gray-400 mt-0.5", size: 16 }),
-                                                React.createElement("div", { className: "text-xs text-gray-600 flex-1" },
-                                                    React.createElement("span", { className: "block" }, React.createElement("span", { className: "font-bold text-gray-800" }, "早："), item.meals.b),
-                                                    React.createElement("span", { className: "block my-1" }, React.createElement("span", { className: "font-bold text-gray-800" }, "午："), item.meals.l),
-                                                    React.createElement("span", { className: "block" }, React.createElement("span", { className: "font-bold text-gray-800" }, "晚："), item.meals.d)
-                                                )
-                                            ),
-                                            React.createElement("div", { className: "w-full h-px bg-gray-200" }),
-                                            React.createElement("div", { className: "flex items-start gap-3" },
-                                                React.createElement(BedDouble, { className: "text-gray-400 mt-0.5", size: 16 }),
-                                                React.createElement("div", { className: "text-xs text-gray-600 flex-1" },
-                                                    React.createElement("span", { className: "font-bold text-gray-800" }, "宿："), item.hotel
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            })
-                        ),
+        {/* Tab Navigation */}
+        <div className="bg-slate-100/80 p-1 rounded-xl flex mb-6 backdrop-blur-sm sticky top-4 z-40 shadow-sm">
+          <button 
+            onClick={() => setActiveTab('itinerary')}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${activeTab === 'itinerary' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            行程表
+          </button>
+          <button 
+            onClick={() => setActiveTab('hotel')}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${activeTab === 'hotel' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            住宿 & 亮點
+          </button>
+        </div>
 
-                        // Tab Content: Highlights
-                        activeTab === 'highlights' && React.createElement("div", { className: "grid grid-cols-2 gap-3" },
-                            React.createElement("div", { className: "col-span-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl p-5 text-white shadow-md" },
-                                React.createElement(Snowflake, { className: "mb-2" }),
-                                React.createElement("h3", { className: "text-lg font-bold" }, "冬季限定雪祭"),
-                                React.createElement("p", { className: "text-sm opacity-90" }, "支笏湖冰濤祭、札幌雪祭，感受零下溫度的夢幻冰雪世界。")
-                            ),
-                            React.createElement("div", { className: "bg-white p-4 rounded-2xl shadow-sm border border-gray-100" },
-                                React.createElement("div", { className: "w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 mb-2" }, React.createElement(Utensils, { size: 18 })),
-                                React.createElement("h4", { className: "font-bold text-gray-800" }, "三大蟹吃到飽"),
-                                React.createElement("p", { className: "text-xs text-gray-500 mt-1" }, "帝王蟹、長腳蟹、毛蟹任您品嚐。")
-                            ),
-                             React.createElement("div", { className: "bg-white p-4 rounded-2xl shadow-sm border border-gray-100" },
-                                React.createElement("div", { className: "w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-2" }, React.createElement(BedDouble, { size: 18 })),
-                                React.createElement("h4", { className: "font-bold text-gray-800" }, "露天溫泉"),
-                                React.createElement("p", { className: "text-xs text-gray-500 mt-1" }, "雪中泡湯，體驗身暖頭寒的極致享受。")
-                            )
-                        ),
-                        
-                        // Tab Content: Notice
-                        activeTab === 'notice' && React.createElement("div", { className: "bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-sm text-gray-600 space-y-3" },
-                             React.createElement("h3", { className: "font-bold text-gray-800 text-base" }, "參團注意事項"),
-                             React.createElement("ul", { className: "list-disc pl-5 space-y-2" },
-                                React.createElement("li", null, "日本電壓為 100V，插座與台灣相同。"),
-                                React.createElement("li", null, "冬季北海道氣溫極低，請務必攜帶防寒大衣、手套、帽子及防滑鞋。"),
-                                React.createElement("li", null, "此行程為 2026/02/08 出發之春節/寒假旺季檔期，機位有限。")
-                             )
-                        ),
-
-                        React.createElement("div", { className: "h-20" })
-                    ),
-
-                    // Sticky Footer
-                    React.createElement("div", { className: "fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 safe-area-pb z-50" },
-                        React.createElement("div", { className: "flex items-center justify-between max-w-md mx-auto" },
-                            React.createElement("div", { className: "flex flex-col" },
-                                React.createElement("span", { className: "text-xs text-gray-500 line-through" }, "TWD 49,900"),
-                                React.createElement("div", { className: "flex items-baseline gap-1" },
-                                    React.createElement("span", { className: "text-sm font-bold text-red-500" }, "TWD"),
-                                    React.createElement("span", { className: "text-2xl font-extrabold text-gray-900" }, tripDetails.price),
-                                    React.createElement("span", { className: "text-xs text-gray-500" }, "/人")
-                                )
-                            ),
-                            React.createElement("button", {
-                                onClick: () => setShowBookingModal(true),
-                                className: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center gap-2"
-                            }, "立即預訂", React.createElement(ArrowRight, { size: 18 }))
-                        )
-                    ),
+        {/* Itinerary List */}
+        {activeTab === 'itinerary' && (
+          <div className="space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-500">
+            {itinerary.map((item, index) => {
+              const isExpanded = expandedDay === index;
+              return (
+                <div 
+                  key={index}
+                  onClick={() => setExpandedDay(isExpanded ? null : index)}
+                  className={`bg-white rounded-2xl transition-all duration-300 border overflow-hidden ${isExpanded ? 'border-indigo-200 shadow-lg shadow-indigo-100 ring-1 ring-indigo-100' : 'border-slate-100 shadow-sm hover:border-slate-200'}`}
+                >
+                  {/* Card Header */}
+                  <div className="p-4 flex gap-4">
+                    {/* Date Box */}
+                    <div className={`flex flex-col items-center justify-center w-14 h-16 rounded-xl shrink-0 transition-colors duration-300 ${isExpanded ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'}`}>
+                      <span className="text-[10px] font-bold uppercase opacity-80">Day</span>
+                      <span className="text-xl font-black leading-none">{item.day}</span>
+                    </div>
                     
-                    // Modal
-                    showBookingModal && React.createElement("div", { className: "fixed inset-0 bg-black/60 z-[60] flex items-end sm:items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200" },
-                        React.createElement("div", { className: "bg-white w-full max-w-sm rounded-3xl p-6 relative animate-in slide-in-from-bottom-10 duration-300" },
-                            React.createElement("button", {
-                                onClick: () => setShowBookingModal(false),
-                                className: "absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-                            }, React.createElement("span", { className: "text-xl" }, "×")),
-                            React.createElement("div", { className: "text-center mb-6" },
-                                React.createElement("div", { className: "w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4" },
-                                    React.createElement(Ticket, { size: 32 })
-                                ),
-                                React.createElement("h3", { className: "text-xl font-bold text-gray-900" }, "感謝您的興趣！"),
-                                React.createElement("p", { className: "text-gray-500 text-sm mt-2" }, "此為 Vibe Coding 演示原型。")
-                            ),
-                            React.createElement("div", { className: "bg-gray-50 p-4 rounded-xl mb-6" },
-                                React.createElement("div", { className: "flex justify-between text-sm mb-2" },
-                                    React.createElement("span", { className: "text-gray-500" }, "出發日期"),
-                                    React.createElement("span", { className: "font-bold" }, tripDetails.date.split(' ')[0])
-                                ),
-                                React.createElement("div", { className: "flex justify-between text-sm" },
-                                    React.createElement("span", { className: "text-gray-500" }, "團費試算"),
-                                    React.createElement("span", { className: "font-bold text-blue-600" }, `$${tripDetails.price} x 1`)
-                                )
-                            ),
-                            React.createElement("button", {
-                                onClick: () => setShowBookingModal(false),
-                                className: "w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-gray-800"
-                            }, "關閉預覽")
-                        )
-                    )
-                )
-            );
-        };
+                    {/* Title Content */}
+                    <div className="flex-1 min-w-0 py-1">
+                      <div className="flex justify-between items-start">
+                        <h3 className={`font-bold text-base leading-tight mb-1 ${isExpanded ? 'text-indigo-900' : 'text-slate-700'}`}>
+                          {item.title.split('/')[0]}
+                        </h3>
+                        <div className="text-slate-300">
+                          {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </div>
+                      </div>
+                      <div className="text-xs text-slate-500 mb-2">{item.date}</div>
+                      
+                      {/* Condensed Highlights */}
+                      {!isExpanded && (
+                        <div className="flex gap-2">
+                          {item.highlights.slice(0, 2).map((h, i) => (
+                            <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-slate-50 text-slate-500 border border-slate-100">
+                              {h}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(HokkaidoTripApp));
-    </script>
-</body>
-</html>
+                  {/* Expanded Content */}
+                  {isExpanded && (
+                    <div className="px-4 pb-5 animate-in fade-in duration-300">
+                      
+                      {/* Day Feature Image */}
+                      {item.image && (
+                        <div className="w-full h-56 mb-4 rounded-xl overflow-hidden relative group shadow-md">
+                           <img 
+                             src={item.image} 
+                             alt={item.title} 
+                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                           />
+                           
+                           {/* Gradient Overlay */}
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                           
+                           {/* Feature Text Overlay (Simplified for visual balance) */}
+                           <div className="absolute bottom-3 left-4 right-4 text-white">
+                             <div className="flex items-start gap-2">
+                               <MapPin size={16} className="text-yellow-400 mt-1 shrink-0" />
+                               <p className="text-sm font-bold leading-relaxed drop-shadow-md opacity-95 text-shadow">
+                                 {item.highlights[1] || item.highlights[0]}
+                               </p>
+                             </div>
+                           </div>
+                        </div>
+                      )}
+
+                      <hr className="border-slate-100 mb-4" />
+                      
+                      {/* Full Title */}
+                      <h4 className="text-sm font-bold text-indigo-900 mb-2">{item.title}</h4>
+                      
+                      {/* Details */}
+                      <p className="text-sm text-slate-600 leading-relaxed mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                        {item.details}
+                      </p>
+
+                      {/* NEW: Deep Dive Section (Feature & History) */}
+                      {item.detailedFeatures && (
+                        <div className="mb-6 space-y-3">
+                            <h5 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                <BookOpen size={12} /> 景點深度導覽
+                            </h5>
+                            
+                            {/* Feature Block */}
+                            <div className="flex gap-3 items-start bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
+                                <Sparkles size={16} className="text-yellow-500 shrink-0 mt-0.5" />
+                                <div>
+                                    <span className="text-xs font-bold text-indigo-800 block mb-1">特色亮點</span>
+                                    <p className="text-xs text-slate-600 leading-relaxed text-justify">
+                                        {item.detailedFeatures.feature}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* History Block */}
+                            <div className="flex gap-3 items-start bg-amber-50/50 p-3 rounded-lg border border-amber-100">
+                                <History size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <span className="text-xs font-bold text-amber-800 block mb-1">歷史典故</span>
+                                    <p className="text-xs text-slate-600 leading-relaxed text-justify">
+                                        {item.detailedFeatures.history}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                      )}
+
+                      {/* Highlights Grid */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {item.highlights.map((h, i) => (
+                          <div key={i} className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border ${index % 2 === 0 ? 'bg-blue-50 text-blue-700 border-blue-100' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
+                            <Ticket size={12} /> {h}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Info Box: Meals & Hotel */}
+                      <div className="bg-slate-50 rounded-xl p-4 space-y-3 border border-slate-200">
+                        <div className="flex gap-3">
+                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-500 shadow-sm shrink-0 border border-slate-100">
+                            <Utensils size={14} />
+                          </div>
+                          <div className="text-xs text-slate-600 space-y-1 flex-1">
+                            <div className="flex justify-between"><span className="font-bold text-slate-800">早餐</span> <span>{item.meals.b}</span></div>
+                            <div className="border-t border-slate-200/50 my-1"></div>
+                            <div className="flex justify-between"><span className="font-bold text-slate-800">午餐</span> <span>{item.meals.l}</span></div>
+                            <div className="border-t border-slate-200/50 my-1"></div>
+                            <div className="flex justify-between"><span className="font-bold text-slate-800">晚餐</span> <span>{item.meals.d}</span></div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-3 items-start pt-2 border-t border-slate-200/50">
+                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-500 shadow-sm shrink-0 border border-slate-100">
+                            <BedDouble size={14} />
+                          </div>
+                          <div className="text-xs text-slate-600 pt-1.5">
+                            <span className="font-bold text-slate-800 block mb-1">住宿飯店</span>
+                            {item.hotel}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Hotel & Highlights Tab */}
+        {activeTab === 'hotel' && (
+          <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
+            
+            {/* Hotel 1: Manza Prince */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+               <div className="h-32 bg-slate-200 relative">
+                 <img src="https://images.unsplash.com/photo-1560185009-dddeb820c7b7?q=80&w=1000&auto=format&fit=crop" alt="Hotel" className="w-full h-full object-cover" />
+                 <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm">Day 2</div>
+               </div>
+               <div className="p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold text-cyan-600 bg-cyan-50 px-2 py-0.5 rounded">溫泉飯店</span>
+                  </div>
+                  <h3 className="font-bold text-slate-800">萬座王子飯店 (Manza Prince)</h3>
+                  <p className="text-xs text-slate-500 mt-2 flex gap-1 items-center">
+                    <Mountain size={12} /> 海拔1800米「雲上的溫泉」
+                  </p>
+               </div>
+            </div>
+
+            {/* Feature: Karuizawa */}
+            <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-5 border border-pink-100">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-pink-500 shadow-sm">
+                  <ShoppingBag size={20} />
+                </div>
+                <h3 className="font-bold text-pink-900">輕井澤度假區</h3>
+              </div>
+              <p className="text-sm text-pink-800/80 leading-relaxed">
+                入住輕井澤周邊，享受森林芬多精。舊銀座通充滿歐式風情，Prince Outlet 更是購物天堂，擁有絕佳的自然景觀與購物體驗。
+              </p>
+            </div>
+
+             {/* Feature: Ski */}
+             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-500 shadow-sm">
+                  <Snowflake size={20} />
+                </div>
+                <h3 className="font-bold text-blue-900">初級滑雪體驗</h3>
+              </div>
+              <p className="text-sm text-blue-800/80 leading-relaxed">
+                特別安排萬座滑雪場體驗。包含雪鞋、雪橇、雪杖，並有專業教練帶領。不想滑雪也可選擇「戲雪活動」玩雪盆與甜甜圈！
+              </p>
+            </div>
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default TokyoSnowTripApp;
