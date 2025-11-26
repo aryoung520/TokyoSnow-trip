@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>玩雪FUN東京</title>
     
-    <!-- iPhone 專屬設定：讓網頁變成全螢幕 App -->
+    <!-- iPhone 專屬設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="東京雪國行">
@@ -41,23 +41,27 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* iOS Safe Area 修正 */
         .pb-safe {
             padding-bottom: env(safe-area-inset-bottom);
         }
         .pt-safe {
             padding-top: env(safe-area-inset-top);
         }
-        /* 防止 iOS 點擊反灰 */
         * {
             -webkit-tap-highlight-color: transparent;
+        }
+        /* 圖片載入失敗時的樣式 */
+        img.error-fallback {
+            object-fit: contain;
+            background-color: #f3f4f6;
+            padding: 20px;
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <div id="root"></div>
 
-    <!-- 載入 React 和 Lucide Icons (使用 ES Modules) -->
+    <!-- 載入 React 和 Lucide Icons -->
     <script type="module">
         import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
         import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
@@ -65,7 +69,7 @@
             Plane, MapPin, Calendar, Utensils, BedDouble, 
             ChevronDown, ChevronUp, Snowflake, Camera, ShoppingBag, 
             Ticket, Heart, Share2, ArrowRight, Mountain, Sparkles,
-            BookOpen, Info, History
+            BookOpen, Info, History, Star
         } from 'https://esm.sh/lucide-react@0.344.0';
 
         const TokyoSnowTripApp = () => {
@@ -103,10 +107,22 @@
                     hotel: "森秋旅館 或 如心之里 或 同級",
                     icon: React.createElement(Plane, { className: "w-5 h-5 text-blue-500" }),
                     tagColor: "bg-blue-50 text-blue-600",
-                    image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=800&auto=format&fit=crop",
+                    attractions: [
+                        {
+                            name: "伊香保石段街",
+                            // 指向 GitHub images 資料夾
+                            image: "./images/伊香保石段街.png",
+                            desc: "365階石階綿延而上，充滿大正浪漫氛圍，是溫泉饅頭發源地。"
+                        },
+                        {
+                            name: "溫泉會席料理",
+                            image: "https://images.unsplash.com/photo-1585938389612-a552a28d6914?q=80&w=800&auto=format&fit=crop",
+                            desc: "享受當季食材製作的精緻日式料理。"
+                        }
+                    ],
                     detailedFeatures: {
-                        feature: "整條街道共有365級石階，象徵「一年365天，天天都熱鬧繁榮」。兩旁林立著許多溫泉饅頭店（伊香保是溫泉饅頭的發源地）、射擊遊戲場與土產店，充滿濃厚的昭和復古風情。",
-                        history: "伊香保溫泉的歷史相當悠久，早在日本最古老的詩歌總集《萬葉集》中就有記載，距今已有1300多年歷史。戰國時代，武田勝賴為了療養受傷的士兵，將此地整建成石階構造的溫泉街，是日本最早進行都市計畫的溫泉區之一。"
+                        feature: "整條街道共有365級石階，象徵「一年365天，天天都熱鬧繁榮」。兩旁林立著許多溫泉饅頭店、射擊遊戲場與土產店。",
+                        history: "伊香保溫泉歷史悠久，早於《萬葉集》中便有記載。戰國時代武田勝賴為療養傷兵而整建，是日本最早進行都市計畫的溫泉區之一。"
                     }
                 },
                 {
@@ -114,15 +130,27 @@
                     title: "伊香保 / 草津湯畑 / 萬座滑雪體驗 (Ski或戲雪)",
                     date: "02/05 (四)",
                     highlights: ["草津溫泉散策", "湯畑舞揉湯秀", "滑雪體驗(含雪具)"],
-                    details: "前往日本三大名湯之一的草津溫泉，參觀著名的「湯畑」與傳統「揉湯秀」。接著前往萬座滑雪場，體驗初級滑雪（含雪鞋、雪橇、雪杖）或 選擇戲雪活動（雪盆、甜甜圈）。",
+                    details: "前往日本三大名湯之一的草津溫泉，參觀著名的「湯畑」。接著前往萬座滑雪場，體驗初級滑雪（含雪鞋、雪橇、雪杖）或 選擇戲雪活動。",
                     meals: { b: "飯店內早餐", l: "壽喜燒定食 或 日式風味餐", d: "飯店自助晚餐 或 會席料理" },
                     hotel: "萬座王子飯店 或 同級",
                     icon: React.createElement(Snowflake, { className: "w-5 h-5 text-cyan-500" }),
                     tagColor: "bg-cyan-50 text-cyan-600",
-                    image: "https://images.unsplash.com/photo-1576014131341-c9772b7a0d42?q=80&w=800&auto=format&fit=crop",
+                    attractions: [
+                        {
+                            name: "草津溫泉湯畑",
+                            // 指向 GitHub images 資料夾
+                            image: "./images/草津溫泉 湯畑.png",
+                            desc: "每分鐘湧出4000公升溫泉，煙霧繚繞的夢幻場景。"
+                        },
+                        {
+                            name: "萬座滑雪場",
+                            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Manza-manzayama.jpg/800px-Manza-manzayama.jpg",
+                            desc: "海拔1800公尺的粉雪天堂，適合初學者體驗。"
+                        }
+                    ],
                     detailedFeatures: {
-                        feature: "草津溫泉連續多年蟬聯日本溫泉百選第一名。最著名的「湯畑」位於溫泉街中心，每分鐘湧出4000公升的滾燙溫泉，熱氣蒸騰如雲霧繚繞。獨特的「揉湯（湯もみ）」表演，是利用長木板攪拌溫泉以降低水溫的傳統技法。",
-                        history: "傳說草津溫泉是由日本武尊所發現，江戶時代的溫泉排行榜中，草津被列為最高等級的「東之大關」。明治時代，德國醫生貝爾茲（Erwin von Bälz）向世界介紹了草津溫泉卓越的療效，使其名揚國際。"
+                        feature: "草津溫泉連續多年蟬聯日本溫泉百選第一名。湯畑是其象徵，獨特的「揉湯」表演更是必看傳統技藝。",
+                        history: "傳說草津溫泉由日本武尊發現。江戶時代被列為最高等級的「東之大關」。明治時代由德國醫生貝爾茲向世界推廣其卓越療效。"
                     }
                 },
                 {
@@ -130,15 +158,33 @@
                     title: "鬼押出園 / 輕井澤舊銀座通 / 聖保羅教堂 / Outlet",
                     date: "02/06 (五)",
                     highlights: ["鬼押出園奇景", "舊輕井澤銀座通", "王子購物廣場Outlet"],
-                    details: "參觀淺間山火山噴發形成的鬼押出園奇景。接著前往避暑勝地輕井澤，漫步舊銀座通商店街，參觀聖保羅教堂。下午在輕井澤王子Outlet盡情購物。",
+                    details: "參觀淺間山火山噴發形成的鬼押出園。接著前往輕井澤，漫步舊銀座通與聖保羅教堂。下午在王子Outlet盡情購物。",
                     meals: { b: "飯店內早餐", l: "釜飯定食 或 燒肉定食", d: "方便遊玩，發放代金2000日幣" },
                     hotel: "輕井澤1130 或 輕井澤王子小木屋 或 同級",
                     icon: React.createElement(ShoppingBag, { className: "w-5 h-5 text-pink-500" }),
                     tagColor: "bg-pink-50 text-pink-600",
-                    image: "https://images.unsplash.com/photo-1483038660502-0e8979c4a8dc?q=80&w=800&auto=format&fit=crop",
+                    attractions: [
+                        {
+                            name: "鬼押出園",
+                            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Onioshidashi01.jpg/800px-Onioshidashi01.jpg",
+                            desc: "淺間山噴發形成的黑色熔岩奇景。"
+                        },
+                        {
+                            name: "聖保羅教堂",
+                            // 指向 GitHub images 資料夾 (這個只有 JPG)
+                            image: "./images/聖保羅教堂2.jpg",
+                            desc: "輕井澤地標，歐風木造建築。"
+                        },
+                        {
+                            name: "輕井澤舊銀座通 & Outlet",
+                            // 指向 GitHub images 資料夾
+                            image: "./images/輕井澤舊銀座通.png",
+                            desc: "充滿歐式風情的街道與佔地廣大的購物天堂。"
+                        }
+                    ],
                     detailedFeatures: {
-                        feature: "聖保羅天主教堂擁有巨大的尖塔與傾斜的三角形屋頂，內部為木造結構，與輕井澤的自然森林完美融合。舊輕井澤銀座通則充滿歐式風情，著名的果醬店、麵包店林立，是有「東方小瑞士」之稱的度假勝地。",
-                        history: "輕井澤原為江戶時代的宿場町。1886年，加拿大傳教士亞歷山大·克羅夫多·蕭（Alexander Croft Shaw）覺得此地氣候類似故鄉多倫多，便在此建造別墅避暑，帶動了外國人士與文人雅士來此度假的風潮。聖保羅教堂則由建築大師安東尼·雷蒙於1935年設計。"
+                        feature: "聖保羅教堂由建築大師安東尼·雷蒙設計，三角形屋頂融入森林背景。輕井澤Outlet則是日本最大級的度假型購物中心。",
+                        history: "輕井澤原為宿場町，1886年加拿大傳教士蕭發現此地氣候宜人，打造別墅避暑，自此成為外國人與文人雅士喜愛的度假勝地。"
                     }
                 },
                 {
@@ -146,15 +192,28 @@
                     title: "川越小江戶 / 免稅店 / 台場 (鋼彈、購物)",
                     date: "02/07 (六)",
                     highlights: ["川越藏造老街", "星巴克時鐘小路店", "獨角獸鋼彈"],
-                    details: "前往有「小江戶」之稱的川越，欣賞傳統藏造建築與時鐘小路。午後返回東京市區，前往免稅店，最後在台場購物廣場自由活動，欣賞巨型獨角獸鋼彈。",
+                    details: "前往有「小江戶」之稱的川越，欣賞傳統藏造建築與時鐘小路。午後返回東京，在台場欣賞巨型獨角獸鋼彈。",
                     meals: { b: "飯店內早餐", l: "日式涮涮鍋 或 鰻魚飯", d: "方便遊玩，敬請自理" },
                     hotel: "池袋太陽城王子 或 池袋大都會 或 同級",
                     icon: React.createElement(Camera, { className: "w-5 h-5 text-purple-500" }),
                     tagColor: "bg-purple-50 text-purple-600",
-                    image: "https://images.unsplash.com/photo-1554286660-c4e97669d273?q=80&w=800&auto=format&fit=crop",
+                    attractions: [
+                        {
+                            name: "川越小江戶",
+                            // 指向 GitHub images 資料夾
+                            image: "./images/川越小江戶.png",
+                            desc: "川越地標，古老的報時鐘樓與傳統藏造建築。"
+                        },
+                        {
+                            name: "台場",
+                            // 指向 GitHub images 資料夾
+                            image: "./images/台場.png",
+                            desc: "東京灣的人氣娛樂區，包含巨型獨角獸鋼彈。"
+                        }
+                    ],
                     detailedFeatures: {
-                        feature: "川越最著名的景觀是「藏造一番街」，街道兩旁保留了許多黑色厚重瓦片屋頂的倉庫式建築（藏造）。地標「時之鐘」每天會敲響四次報時。這裡還有一間設計融入江戶街景的星巴克，是熱門打卡點。",
-                        history: "川越在江戶時代是繁榮的商業重鎮，透過新河岸川與江戶（東京）進行物資運輸，因此被稱為「小江戶」。1893年發生川越大火後，商人們為了防火，不惜重金建造了耐火的「藏造」建築群，這些建築幸運地保留至今，成為國家重要傳統建造物群保存地區。"
+                        feature: "川越藏造一番街保留了江戶時代的黑瓦建築。台場則是東京灣的人氣娛樂區，巨大的獨角獸鋼彈是動漫迷聖地。",
+                        history: "川越因與江戶（東京）的船運貿易繁榮而被稱為「小江戶」。藏造建築是為了防火而建，現為國家重要傳統建造物群保存地區。"
                     }
                 },
                 {
@@ -167,10 +226,21 @@
                     hotel: "溫暖的家",
                     icon: React.createElement(Plane, { className: "w-5 h-5 text-green-500" }),
                     tagColor: "bg-green-50 text-green-600",
-                    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop",
+                    attractions: [
+                        {
+                            name: "成田機場",
+                            image: "https://images.unsplash.com/photo-1573139897007-a2563d99e373?q=80&w=800&auto=format&fit=crop",
+                            desc: "旅程的終點，最後的購物衝刺。"
+                        },
+                        {
+                            name: "星宇航空",
+                            image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop",
+                            desc: "享受精品級的飛行體驗。"
+                        }
+                    ],
                     detailedFeatures: {
-                        feature: "星宇航空（STARLUX Airlines）是台灣新興的精品航空公司，以精緻的機上餐食、獨特的香氛以及充滿質感的客艙設計聞名，致力於提供高端的飛行體驗。",
-                        history: "星宇航空由張國煒於2018年創辦，2020年正式開航。即使初期面臨疫情挑戰，仍堅持打造高品質服務，迅速累積了大量忠實粉絲，被稱為台灣航空界的「精品」。"
+                        feature: "星宇航空（STARLUX）提供精緻的機上餐食與高質感客艙設計，為旅程畫下完美句點。",
+                        history: "星宇航空由張國煒創辦，致力於打造台灣高端精品航空品牌，自開航以來便備受旅客好評。"
                     }
                 }
             ];
@@ -282,11 +352,14 @@
                             const isExpanded = expandedDay === index;
                             return React.createElement("div", {
                                 key: index,
-                                onClick: () => setExpandedDay(isExpanded ? null : index),
+                                onClick: (e) => {
+                                    if (e.target.tagName === 'IMG' || e.target.closest('.no-scrollbar')) return;
+                                    setExpandedDay(isExpanded ? null : index);
+                                },
                                 className: `bg-white rounded-2xl transition-all duration-300 border overflow-hidden ${isExpanded ? 'border-indigo-200 shadow-lg shadow-indigo-100 ring-1 ring-indigo-100' : 'border-slate-100 shadow-sm hover:border-slate-200'}`
                             },
                                 // Header
-                                React.createElement("div", { className: "p-4 flex gap-4" },
+                                React.createElement("div", { className: "p-4 flex gap-4 cursor-pointer" },
                                     React.createElement("div", { className: `flex flex-col items-center justify-center w-14 h-16 rounded-xl shrink-0 transition-colors duration-300 ${isExpanded ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'}` },
                                         React.createElement("span", { className: "text-[10px] font-bold uppercase opacity-80" }, "Day"),
                                         React.createElement("span", { className: "text-xl font-black leading-none" }, item.day)
@@ -304,16 +377,33 @@
                                 ),
                                 // Expanded Content
                                 isExpanded && React.createElement("div", { className: "px-4 pb-5 animate-in fade-in duration-300" },
-                                    item.image && React.createElement("div", { className: "w-full h-56 mb-4 rounded-xl overflow-hidden relative group shadow-md" },
-                                        React.createElement("img", { src: item.image, alt: item.title, className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" }),
-                                        React.createElement("div", { className: "absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" }),
-                                        React.createElement("div", { className: "absolute bottom-3 left-4 right-4 text-white" },
-                                            React.createElement("div", { className: "flex items-start gap-2" },
-                                                React.createElement(MapPin, { size: 16, className: "text-yellow-400 mt-1 shrink-0" }),
-                                                React.createElement("p", { className: "text-sm font-bold leading-relaxed drop-shadow-md opacity-95 text-shadow" }, item.highlights[1] || item.highlights[0])
+                                    
+                                    // Attractions Gallery (Vertical Stack)
+                                    item.attractions && React.createElement("div", { className: "space-y-4 mb-6" },
+                                        item.attractions.map((attr, i) => 
+                                            React.createElement("div", { key: i, className: "bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100" },
+                                                React.createElement("div", { className: "h-48 relative" },
+                                                    React.createElement("img", { 
+                                                        src: attr.image, 
+                                                        alt: attr.name, 
+                                                        className: "w-full h-full object-cover",
+                                                        onError: (e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop';
+                                                            e.target.classList.add('error-fallback');
+                                                        }
+                                                    }),
+                                                    React.createElement("div", { className: "absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-3" },
+                                                         React.createElement("p", { className: "text-white font-bold text-lg" }, attr.name)
+                                                    )
+                                                ),
+                                                React.createElement("div", { className: "p-3" },
+                                                    React.createElement("p", { className: "text-sm text-slate-600" }, attr.desc)
+                                                )
                                             )
                                         )
                                     ),
+
                                     React.createElement("hr", { className: "border-slate-100 mb-4" }),
                                     React.createElement("h4", { className: "text-sm font-bold text-indigo-900 mb-2" }, item.title),
                                     React.createElement("p", { className: "text-sm text-slate-600 leading-relaxed mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100" }, item.details),
@@ -371,12 +461,12 @@
                         })
                     ),
                     
-                    // Hotel & Highlights Tab (Same as before but simplified structure for React.createElement)
+                    // Hotel & Highlights Tab
                     activeTab === 'hotel' && React.createElement("div", { className: "space-y-4 animate-in slide-in-from-right-4 fade-in duration-300" },
                          // Manza Prince
                         React.createElement("div", { className: "bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100" },
                             React.createElement("div", { className: "h-32 bg-slate-200 relative" },
-                                React.createElement("img", { src: "https://images.unsplash.com/photo-1560185009-dddeb820c7b7?q=80&w=1000&auto=format&fit=crop", className: "w-full h-full object-cover" }),
+                                React.createElement("img", { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Manza_Onsen_Tsumagoi_Gunma01bs4272.jpg/800px-Manza_Onsen_Tsumagoi_Gunma01bs4272.jpg", className: "w-full h-full object-cover" }),
                                 React.createElement("div", { className: "absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm" }, "Day 2")
                             ),
                             React.createElement("div", { className: "p-4" },
@@ -386,20 +476,33 @@
                             )
                         ),
                         // Karuizawa
-                        React.createElement("div", { className: "bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-5 border border-pink-100" },
-                            React.createElement("div", { className: "flex items-center gap-3 mb-3" },
-                                React.createElement("div", { className: "w-10 h-10 bg-white rounded-full flex items-center justify-center text-pink-500 shadow-sm" }, React.createElement(ShoppingBag, { size: 20 })),
-                                React.createElement("h3", { className: "font-bold text-pink-900" }, "輕井澤度假區")
+                        React.createElement("div", { className: "bg-white rounded-2xl overflow-hidden shadow-sm border border-pink-100" },
+                            React.createElement("div", { className: "h-32 bg-pink-50 relative" },
+                                // 使用上傳的圖片
+                                React.createElement("img", { src: "./images/輕井澤舊銀座通.png", className: "w-full h-full object-cover" }),
+                                React.createElement("div", { className: "absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm" }, "Day 3")
                             ),
-                            React.createElement("p", { className: "text-sm text-pink-800/80 leading-relaxed" }, "入住輕井澤周邊，享受森林芬多精。舊銀座通充滿歐式風情，Prince Outlet 更是購物天堂，擁有絕佳的自然景觀與購物體驗。")
+                            React.createElement("div", { className: "p-4" },
+                                React.createElement("div", { className: "flex items-center gap-3 mb-3" },
+                                    React.createElement("div", { className: "w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 shadow-sm" }, React.createElement(ShoppingBag, { size: 16 })),
+                                    React.createElement("h3", { className: "font-bold text-pink-900" }, "輕井澤度假區")
+                                ),
+                                React.createElement("p", { className: "text-sm text-pink-800/80 leading-relaxed" }, "入住輕井澤周邊，享受森林芬多精。舊銀座通充滿歐式風情，Prince Outlet 更是購物天堂，擁有絕佳的自然景觀與購物體驗。")
+                            )
                         ),
                         // Ski
-                        React.createElement("div", { className: "bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100" },
-                            React.createElement("div", { className: "flex items-center gap-3 mb-3" },
-                                React.createElement("div", { className: "w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-500 shadow-sm" }, React.createElement(Snowflake, { size: 20 })),
-                                React.createElement("h3", { className: "font-bold text-blue-900" }, "初級滑雪體驗")
+                        React.createElement("div", { className: "bg-white rounded-2xl overflow-hidden shadow-sm border border-blue-100" },
+                            React.createElement("div", { className: "h-32 bg-blue-50 relative" },
+                                React.createElement("img", { src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Manza-manzayama.jpg/800px-Manza-manzayama.jpg", className: "w-full h-full object-cover" }),
+                                React.createElement("div", { className: "absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm" }, "Day 2")
                             ),
-                            React.createElement("p", { className: "text-sm text-blue-800/80 leading-relaxed" }, "特別安排萬座滑雪場體驗。包含雪鞋、雪橇、雪杖，並有專業教練帶領。不想滑雪也可選擇「戲雪活動」玩雪盆與甜甜圈！")
+                            React.createElement("div", { className: "p-4" },
+                                React.createElement("div", { className: "flex items-center gap-3 mb-3" },
+                                    React.createElement("div", { className: "w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 shadow-sm" }, React.createElement(Snowflake, { size: 16 })),
+                                    React.createElement("h3", { className: "font-bold text-blue-900" }, "初級滑雪體驗")
+                                ),
+                                React.createElement("p", { className: "text-sm text-blue-800/80 leading-relaxed" }, "特別安排萬座滑雪場體驗。包含雪鞋、雪橇、雪杖，並有專業教練帶領。不想滑雪也可選擇「戲雪活動」玩雪盆與甜甜圈！")
+                            )
                         )
                     )
                 )
