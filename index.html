@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>玩雪FUN東京</title>
     
-    <!-- iPhone 專屬設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="東京雪國行">
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=180&auto=format&fit=crop">
 
-    <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 設定 Tailwind 字型與顏色 -->
     <script>
         tailwind.config = {
             theme: {
@@ -52,16 +49,14 @@
         }
         /* 圖片載入失敗時的樣式 */
         img.error-fallback {
-            object-fit: contain;
+            object-fit: cover;
             background-color: #f3f4f6;
-            padding: 20px;
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <div id="root"></div>
 
-    <!-- 載入 React 和 Lucide Icons -->
     <script type="module">
         import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
         import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
@@ -114,14 +109,12 @@
                         },
                         {
                             name: "伊香保石段街",
-                            // 指向 GitHub images 資料夾
                             image: "./images/伊香保石段街.png",
                         },
                         {
                             name: "伊香保石段街",
-                            // 指向 GitHub images 資料夾
                             image: "./images/伊香保石段街2.jpg",
-                            desc: "伊香保溫泉的象徵，這條擁有400多年歷史的石階梯共有365階，象徵著「一年365天，天天繁榮熱鬧」。石階兩旁林立著充滿昭和復古風情的溫泉旅館、伴手禮店、射擊遊戲場與足湯。遊客可以邊吃著剛出爐的勝月堂溫泉饅頭，邊漫步登高，最後抵達頂端的伊香保神社祈求良緣。"
+                            desc: "伊香保溫泉的象徵，這條擁有400多年歷史的石階梯共有365階，象徵著「一年365天，天天繁榮熱鬧」。石階兩旁林立著充滿昭和復古風情的溫泉旅館、伴手禮店、射擊遊戲場與足湯。"
                         }
                     ],
                     detailedFeatures: {
@@ -142,14 +135,12 @@
                     attractions: [
                         {
                             name: "草津溫泉湯畑",
-                            // 指向 GitHub images 資料夾
                             image: "./images/草津溫泉 湯畑.png",
                         },
                         {
                             name: "草津溫泉湯畑",
-                            // 指向 GitHub images 資料夾
                             image: "./images/草津溫泉 湯畑2.jpg",
-                            desc: "日本三大名湯之首草津溫泉的地標，每分鐘湧出4000公升滾燙泉水。透過七條木槽冷卻水溫並採集「湯之花」。白天煙霧繚繞如夢似幻，夜晚點燈後更顯浪漫。必看的「揉湯」表演，吟唱草津節並用長木板攪拌泉水，是獨有的傳統文化體驗。"
+                            desc: "日本三大名湯之首草津溫泉的地標，每分鐘湧出4000公升滾燙泉水。透過七條木槽冷卻水溫並採集「湯之花」。"
                         },
                         {
                             name: "萬座滑雪場",
@@ -179,31 +170,26 @@
                         },
                         {
                             name: "鬼押出園",
-                            // 指向 GitHub images 資料夾 (這個只有 JPG)
                             image: "./images/鬼押出園2.jpg",
-                            desc: "世界三大奇景之一，是1783年淺間山火山大爆發時，噴出的熔岩凝固後形成的黑色奇岩地貌。無數猙獰的巨岩彷彿鬼怪推擠而出，景象壯觀。園區內的觀音堂可祈福，冬季雪白覆蓋在黑色熔岩上，形成絕美的黑白對比世界"
+                            desc: "世界三大奇景之一，是1783年淺間山火山大爆發時，噴出的熔岩凝固後形成的黑色奇岩地貌。"
                         },
                         {
                             name: "聖保羅教堂",
-                            // 指向 GitHub images 資料夾 (這個只有 JPG)
                             image: "./images/聖保羅教堂.png",
                         },
                         {
                             name: "聖保羅教堂",
-                            // 指向 GitHub images 資料夾 (這個只有 JPG)
                             image: "./images/聖保羅教堂2.jpg",
-                            desc: "輕井澤代表性地標，由建築師安東尼·雷蒙於1935年設計。這座溫馨的木造天主教堂擁有巨大的尖塔與傾斜的三角形屋頂，完美融入森林。內部以原木支撐，氛圍莊嚴。傳說在此結婚能獲得幸福，是情侶嚮往的浪漫聖地。"
+                            desc: "輕井澤代表性地標，由建築師安東尼·雷蒙於1935年設計。這座溫馨的木造天主教堂擁有巨大的尖塔與傾斜的三角形屋頂，完美融入森林。"
                         },
                         {
                             name: "輕井澤舊銀座通",
-                            // 指向 GitHub images 資料夾
                             image: "./images/輕井澤舊銀座通.png",
                         },
                         {
                             name: "輕井澤舊銀座通",
-                            // 指向 GitHub images 資料夾
                             image: "./images/輕井澤舊銀座通2.jpg",
-                            desc: "輕井澤最熱鬧的商店街，洋溢濃厚歐式風情。匯集了澤屋果醬、淺野屋麵包、MIKADO咖啡等歷史悠久的老店。昔日是傳教士與文人雅士的避暑勝地，漫步其中不僅能品嚐美食、購買伴手禮，還能感受古典優雅的度假氛圍。"
+                            desc: "輕井澤最熱鬧的商店街，洋溢濃厚歐式風情。匯集了澤屋果醬、淺野屋麵包、MIKADO咖啡等歷史悠久的老店。"
                         }
                     ],
                     detailedFeatures: {
@@ -224,26 +210,22 @@
                     attractions: [
                         {
                             name: "川越小江戶",
-                            // 指向 GitHub images 資料夾
                             image: "./images/川越小江戶.png",
                         },
                         {
                             name: "川越小江戶",
-                            // 指向 GitHub images 資料夾
                             image: "./images/川越小江戶2.jpg",
-                            desc: "距離東京不遠的時光隧道，完整保留江戶風貌。「藏造一番街」矗立著黑色厚重瓦片的傳統倉庫建築。地標「時之鐘」屹立數百年，至今仍敲鐘報時。遊客可穿和服漫步，品嚐地瓜甜點，或造訪冰川神社，深刻體驗日本傳統魅力。"
+                            desc: "距離東京不遠的時光隧道，完整保留江戶風貌。「藏造一番街」矗立著黑色厚重瓦片的傳統倉庫建築。"
                         },
                         {
                             name: "台場",
-                            // 指向 GitHub images 資料夾
                             image: "./images/台場.png",
-                        }
+                        }, // <--- 修正：這裡原本少了一個逗號
                         {
                             name: "台場",
-                            // 指向 GitHub images 資料夾
                             image: "./images/台場2.jpg",
-                            desc: "東京灣最受歡迎的娛樂區。最吸睛的是DiverCity前的「獨角獸鋼彈」立像，高19.7公尺，夜晚有精彩燈光變身秀。此外，還能漫步海濱公園，欣賞彩虹大橋、自由女神與東京鐵塔同框的迷人夜景，是感受東京現代魅力的最佳去處。"
-                        },
+                            desc: "東京灣最受歡迎的娛樂區。最吸睛的是DiverCity前的「獨角獸鋼彈」立像，高19.7公尺，夜晚有精彩燈光變身秀。"
+                        }
                     ],
                     detailedFeatures: {
                         feature: "川越藏造一番街保留了江戶時代的黑瓦建築。台場則是東京灣的人氣娛樂區，巨大的獨角獸鋼彈是動漫迷聖地。",
@@ -261,6 +243,11 @@
                     icon: React.createElement(Plane, { className: "w-5 h-5 text-green-500" }),
                     tagColor: "bg-green-50 text-green-600",
                     attractions: [
+                        {
+                            name: "回家",
+                            image: "./images/回家.jpg",
+                            desc: "旅程的終點，最後的購物衝刺。"
+                        },
                         {
                             name: "星宇航空",
                             image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop",
@@ -411,15 +398,15 @@
                                     item.attractions && React.createElement("div", { className: "space-y-4 mb-6" },
                                         item.attractions.map((attr, i) => 
                                             React.createElement("div", { key: i, className: "bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100" },
-                                                // 修改這裡的 h-64 可以改變圖片高度 (例如 h-48, h-72)
                                                 React.createElement("div", { className: "h-64 relative" }, 
                                                     React.createElement("img", { 
                                                         src: attr.image, 
                                                         alt: attr.name, 
-                                                        className: "w-full h-full object-contain bg-slate-50", // 改成 object-contain
+                                                        className: "w-full h-full object-cover",
                                                         onError: (e) => {
                                                             e.target.onerror = null;
-                                                            e.target.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=800&auto=format&fit=crop';
+                                                            // 當圖片載入失敗時，使用 Unsplash 隨機圖
+                                                            e.target.src = `https://source.unsplash.com/800x600/?winter,japan,${i}`;
                                                             e.target.classList.add('error-fallback');
                                                         }
                                                     }),
@@ -427,7 +414,7 @@
                                                          React.createElement("p", { className: "text-white font-bold text-lg" }, attr.name)
                                                     )
                                                 ),
-                                                React.createElement("div", { className: "p-3" },
+                                                attr.desc && React.createElement("div", { className: "p-3" },
                                                     React.createElement("p", { className: "text-sm text-slate-600" }, attr.desc)
                                                 )
                                             )
@@ -509,7 +496,7 @@
                         React.createElement("div", { className: "bg-white rounded-2xl overflow-hidden shadow-sm border border-pink-100" },
                             React.createElement("div", { className: "h-32 bg-pink-50 relative" },
                                 // 使用上傳的圖片
-                                React.createElement("img", { src: "./images/輕井澤舊銀座通.png", className: "w-full h-full object-cover" }),
+                                React.createElement("img", { src: "./images/輕井澤舊銀座通.png", className: "w-full h-full object-cover", onError: (e) => { e.target.src = "https://source.unsplash.com/800x600/?shopping,mall"; } }),
                                 React.createElement("div", { className: "absolute top-2 right-2 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm" }, "Day 3")
                             ),
                             React.createElement("div", { className: "p-4" },
@@ -544,11 +531,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
